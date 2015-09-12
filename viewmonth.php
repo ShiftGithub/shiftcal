@@ -18,7 +18,7 @@
 	include(INCLUDES."/header.html");
 ?>
 
-<link rel='stylesheet' href='/css/viewmonth.css' />
+<link rel='stylesheet' href='<?php echo CALURL; ?>css/viewmonth.css' />
 
 <?php
 	$conn = mysql_connect(DBHOST, DBUSER, DBPASSWORD) or die(mysql_error());
