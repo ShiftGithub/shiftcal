@@ -19,11 +19,11 @@
     include("include/view.php");
     include("include/repeat.php");
 ?>
-<script type="text/javascript" src="include/countdown.js">
+<script type="text/javascript" src="<?php echo CALURL; ?>js/countdown.js">
 </script>
-<script type="text/javascript" src="include/xmlextras.js">
+<script type="text/javascript" src="<?php echo CALURL; ?>js/xmlextras.js">
 </script>
-<script type="text/javascript" src="include/loadday.js">
+<script type="text/javascript" src="<?php echo CALURL; ?>js/loadday.js">
 </script>
 <script type="text/javascript">
 function alldays(checkbox)

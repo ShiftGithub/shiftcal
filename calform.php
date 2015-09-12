@@ -123,8 +123,7 @@
 
 
 ?>
-<script type="text/javascript" language="JavaScript" src="include/xmlextras.js">
-</script>
+<script type="text/javascript" language="JavaScript" src="<?php echo CALURL ?>js/xmlextras.js"></script>
 <script type="text/javascript" language="JavaScript">
     // These are some trivial functions, generated via PHP.  They are
     // all collected here so that little snippets of PHP code won't
@@ -398,7 +397,7 @@ function formversion(chg)
     adjustdatesinput(chg);
 }
 </script>
-<script type="text/javascript" language="JavaScript" src="include/calform.js"></script>
+<script type="text/javascript" language="JavaScript" src="<?php echo CALURL; ?>js/calform.js"></script>
 <?php
     print "<style type=\"text/css\">\n";
     print "td.section { background: url(".IMAGES."/ootall.gif) no-repeat;  vertical-align: top; padding-top: 0; margin-top: 0}\n";

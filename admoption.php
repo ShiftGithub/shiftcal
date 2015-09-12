@@ -2,7 +2,7 @@
     include('include/options.php');
     calbegin('Options Editor');
 ?>
-    <script type="text/JavaScript">
+    <script type="text/javascript">
 	/* Stores the original value of an option, before it is edited */
 	var oldvalue;
 

@@ -39,7 +39,7 @@
 	}
     }
 ?>
-<script type="text/javascript" src="include/xmlextras.js">
+<script type="text/javascript" src="include/<?php echo CALURL;?>js/xmlextras.js">
 </script>
 <script type="text/javascript">
 var startdate = "<?php print $startdate; ?>";

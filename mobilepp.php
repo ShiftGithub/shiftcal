@@ -117,8 +117,8 @@ a.timetitle { text-decoration: none; }
 a.timetitle:focus { font-size: larger; }
 span.clipped { white-space: nowrap; overflow: hidden; }
 </style>
-<script type="text/JavaScript" src="include/xmlextras.js"></script>
-<script type="text/JavaScript">
+<script type="text/javascript" src="include/<?php echo CALURL;?>js/xmlextras.js"></script>
+<script type="text/javascript">
 
 // List of pending fetches
 var getting = Array();
@@ -258,7 +258,7 @@ function clickevent(eventid)
 	}
     }
 ?>
-<script type="text/JavaScript">
+<script type="text/javascript">
 //Preload the "spinner" graphic image
 var spinner = new Image();
 spinner.src = "images/spinner.gif";

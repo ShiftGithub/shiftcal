@@ -39,7 +39,7 @@
 <style type="text/css">
     td {text-align: center;}
 </style>
-<script type="text/javascript" src="include/xmlextras.js"></script>
+<script type="text/javascript" src="include/<?php echo CALURL;?>js/xmlextras.js"></script>
 <script type="text/javascript">
 function changecaladdr(canon, locname, address, area, locked)
 {

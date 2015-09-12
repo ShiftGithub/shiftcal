@@ -97,7 +97,7 @@
     div.contactRevised	{ font-weight: normal; }
     a.button { border: medium outset #ffd080; background: #ffd080; text-decoration: none; padding-left: 2px; padding-right: 2px; cursor: pointer; white-space: nowrap;}
 </style>
-<script type="text/javascript" src="include/xmlextras.js"></script>
+<script type="text/javascript" src="include/<?php echo CALURL;?>js/xmlextras.js"></script>
 <script type="text/javascript">
 <?php print "SHIFTEMAIL = \"".SHIFTEMAIL."\";\n"; ?>
 </script>
