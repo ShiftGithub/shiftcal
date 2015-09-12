@@ -338,7 +338,7 @@ function alldays(checkbox)
     }
 ?>
 
-  <script language="JavaScript" type="text/JavaScript">
+  <script language="JavaScript" type="text/javascript">
     <!--
       /* Highlight today in the calendar table */
       var now = new Date();

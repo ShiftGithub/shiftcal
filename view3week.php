@@ -176,7 +176,7 @@ Most of the events in this calendar are <strong>not</strong> produced by Shift.
 	}
 ?>
 
-  <script language="JavaScript" type="text/JavaScript">
+  <script language="JavaScript" type="text/javascript">
     <!--
       /* Highlight today in the calendar table */
       var now = new Date();
