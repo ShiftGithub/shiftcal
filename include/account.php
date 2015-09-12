@@ -1,15 +1,15 @@
 <?php
 	# Database access constants
-	define("DBHOST", "localhost");
-	define("DBUSER", "steve");
-	define("DBPASSWORD", "pw");
-	define("DBDATABASE", "pp");
+	define("DBHOST", "localhost:8889");
+	define("DBUSER", "root");
+	define("DBPASSWORD", "root");
+	define("DBDATABASE", "shift");
 
 	# Directory where SHIFT's standard header and footer are stored
-	define("INCLUDES", "../includes");
+	define("INCLUDES", getcwd() . "/includes");
 
 	# URL of the Directory where the calendar resides
-	define("CALURL", "http://localhost/~shift/cal/");
+	define("CALURL", "http://shiftcal.local:8888/");
 
 	# The page to show when the user loads CALURL
 	define("MAINPAGE", "view3week.php");

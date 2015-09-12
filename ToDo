@@ -66,7 +66,7 @@
 	changes mostly boil down to changing the WHERE clause in the
 	"Update" logic's SQL statement.
 
-* Add the "Ride Leader Comic" to the form.
+* Add the "Ride Leader Comic" to the form. (Done!)
 
 * Deal with accented characters.  How to store?  How to encode in a page?
 

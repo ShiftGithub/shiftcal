@@ -1,8 +1,12 @@
+create database if not exists pp;
+use pp;
+
 create table calevent (
 modified timestamp,
 id int not null primary key auto_increment,
 name varchar(255),
 email varchar(255),
+review varchar(255),
 hideemail int(1),
 emailforum int(1),
 printemail int(1),
@@ -33,6 +37,7 @@ address varchar(255),
 addressverified char(1),
 locdetails varchar(255),
 area char(1),
+highlight int(1),
 external varchar(255)
 );
 

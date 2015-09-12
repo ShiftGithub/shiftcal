@@ -7,8 +7,8 @@
 ###############################################################################
 # These supply the values needed to log into the SQL database
 dbhost=localhost
-dbuser=steve
-dbpassword=pw
+dbuser=root
+dbpassword=
 dbdatabase=pp
 
 # URL of the directory where the calendar resides
