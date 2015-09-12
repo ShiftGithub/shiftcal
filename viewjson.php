@@ -53,6 +53,5 @@
       $events[] = $event;
   }
 
-  echo json_encode($events);  
-  
+  echo json_encode($events);    
   
