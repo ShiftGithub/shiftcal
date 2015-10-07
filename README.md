@@ -31,37 +31,40 @@ Minimally you'll need to do the following:
 - run mysql < init.sql to create an empty database
 - profit! (aka load http://localhost/shiftcal)
 
-For Macs, here are step-by-step instructions:
+#### For Macs, here are step-by-step instructions:
 
-Install php
-- brew tap homebrew/dupes
-- brew tap homebrew/homebrew-php
-- brew install php56
+- Install php
+  - `brew tap homebrew/dupes`
+  - `brew tap homebrew/homebrew-php`
+  - `brew install php56`
 
-Enable php and mysql
-- sudo apachectl start
-- Open http://localhost/ in browser. If page doesn't say "It works!", see below 
-- cd /library/webserver/documents
-- In text editor, make sure index.php says: <?php phpinfo(); ?> and in /etc/apache2/httpd.conf, this line is not commented out: LoadModule php5_module libexec/apache2/libphp5.so
-- sudo apachectl restart
 
-Clone source code
-- mkdir shiftcal
-- git init
-- git clone https://github.com/ShiftGithub/shiftcal.git
+- enable php and mysql
+  - `sudo apachectl start`
+  - Open http://localhost/ in a browser. If page doesn't say "It works!", see below
+  - `cd /library/webserver/documents`
+  - In text editor, make sure index.php says: `<?php phpinfo(); ?>` and in /etc/apache2/httpd.conf, this line is not commented out: `LoadModule php5_module libexec/apache2/libphp5.so`
+  - `sudo apachectl restart`
 
-Install and adjust MySQL database
-- Download and install mysql-5.6.26-osx10.9-x86_64.tar.gz
-- In Mac System Preferences, create an instance of MySQL server by double clicking on icon
-- sudo mkdir /var/mysql
-- sudo ln -s /tmp/mysql.sock /var/mysql
 
-Untar includes.tgz
-- cd /library/webserver/documents
-- sudo tar xzf shiftcal/includes.tgz
+- Clone source code
+  - `git clone https://github.com/ShiftGithub/shiftcal.git`
 
-Create an empty MySQL database
-- /usr/local/mysql/bin/mysql -uroot < init.sql
+
+- Install and adjust MySQL database
+  - Download and install mysql-5.6.26-osx10.9-x86_64.tar.gz
+  - In Mac System Preferences, create an instance of MySQL server by double clicking on icon
+  - `sudo mkdir /var/mysql`
+  - `sudo ln -s /tmp/mysql.sock /var/mysql`
+
+
+- Untar includes.tgz
+  - `cd /library/webserver/documents`
+  - `sudo tar xzf shiftcal/includes.tgz`
+
+
+- Create an empty MySQL database
+  - `/usr/local/mysql/bin/mysql -uroot < init.sql`
 
 
 How to propose changes
