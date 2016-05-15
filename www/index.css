@@ -70,6 +70,12 @@ a.expandDetails {
     background-color: #ffbd2c;
     overflow: scroll;
 }
+#day-table {
+    width: 100%;
+}
+.day-table-row {
+    height: 30px;
+}
 #month-table {
     width: 100%;
 }
