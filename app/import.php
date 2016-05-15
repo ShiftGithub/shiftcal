@@ -1,10 +1,17 @@
 <?php
 /**
  * Imports some events from the real calendar for testing
+ *
+ * Takes one argument, number of days of events to import. Default is 10.
  */
 include('init.php');
 const URL = 'http://shift2bikes.org/betacal/www/events.php';
-$endDate = new DateTime('+3 days');
+if (count($argv) > 1) {
+    $futureDays = intval($argv[1]) - 1;
+} else {
+    $futureDays = 9;
+}
+$endDate = new DateTime("+$futureDays days");
 $ch = curl_init(URL . "?enddate=" . $endDate->format('Y-m-d'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $eventJson = curl_exec($ch);
