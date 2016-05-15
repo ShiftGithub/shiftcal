@@ -98,69 +98,123 @@
             </div>
             <span id="save-result"></span>
         </div>
-        <form id="general-fields">
+        <form id="event-entry">
             <input type="hidden" name="id" value="{{id}}" />
-            <div class="form-group">
-                <label class="control-label" for="title">Event title:</label>
-                <input type="text" class="form-control" name="title" id="title" value="{{title}}" />
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="details">Description:</label>
-                <textarea class="form-control" name="details" id="details" >{{details}}</textarea>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="venue">Venue name:</label>
-                <input type="text" class="form-control" name="venue" id="venue" value="{{venue}}" />
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="address">Address</label>
-                <input type="text" class="form-control" name="address" id="address" value="{{address}}" />
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="length">Length of route:</label>
-                <select name="length" class="form-control" id="length">
-                    {{# lengthOptions }}
-                    <option value="{{range}}" {{# isSelected }}selected{{/ isSelected }}>{{range}} miles</option>
-                    {{/ lengthOptions }}
-                </select>
-            </div>
-            <div id="date-select-container" class="form-group">
-                <div id="date-select">
-                    <div id="load-earlier" class="loading-zone"></div>
-                    <table id="month-table">
-                    </table>
-                    <div id="load-later" class="loading-zone"></div>
+            <div class="panel-group" role="tablist" id="event-fields">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a role="button" data-toggle="collapse" data-parent="#event-fields" href="#general-fields">
+                            General info
+                        </a>
+                    </div>
+                    <div id="general-fields" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="control-label" for="title">Event title:</label>
+                                <input type="text" class="form-control" name="title" id="title" value="{{title}}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="details">Description:</label>
+                                <textarea class="form-control" name="details" id="details" >{{details}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="venue">Venue name:</label>
+                                <input type="text" class="form-control" name="venue" id="venue" value="{{venue}}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="address">Address</label>
+                                <input type="text" class="form-control" name="address" id="address" value="{{address}}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="length">Length of route:</label>
+                                <select name="length" class="form-control" id="length">
+                                    {{# lengthOptions }}
+                                    <option value="{{range}}" {{# isSelected }}selected{{/ isSelected }}>{{range}} miles</option>
+                                    {{/ lengthOptions }}
+                                </select>
+                            </div>
+                            <div id="date-select-container" class="form-group">
+                                <div id="date-select">
+                                    <div id="load-earlier" class="loading-zone"></div>
+                                    <table id="month-table">
+                                    </table>
+                                    <div id="load-later" class="loading-zone"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="time">Time:</label>
+                                <select name="time" class="form-control" id="time">
+                                    {{# timeOptions }}
+                                    <option value="{{time}}" {{# isSelected }}selected{{/ isSelected }}>{{time}}</option>
+                                    {{/ timeOptions }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="time">Time:</label>
-                <select name="time" class="form-control" id="time">
-                    {{# timeOptions }}
-                    <option value="{{time}}" {{# isSelected }}selected{{/ isSelected }}>{{time}}</option>
-                    {{/ timeOptions }}
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="organizer">Your name:</label>
-                <input type="text" class="form-control" name="organizer" id="organizer" value="{{organizer}}">
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="email">Your email:</label>
-                <input type="text" class="form-control" name="email" id="email" value="{{email}}" >
-            </div>
-            <div class="checkbox">
-                <input type="hidden" name="email-me" value="0" />
-                <label class="control-label" for="email-me">
-                    <input type="checkbox" name="email-me" id="email-me" {{# emailMe }}checked{{/ emailMe }} />
-                    Send forum messages to this email address
-                </label>
-            </div>
-            <div class="checkbox">
-                <input type="hidden" name="hideemail" value="0" />
-                <label class="control-label" for="hideemail">
-                    <input type="checkbox" name="hideemail" id="hideemail" {{# hideEmail }}checked{{/ hideEmail }} />
-                    Don't publish my email address online
-                </label>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a role="button" data-toggle="collapse" data-parent="#event-fields" href="#print-fields">
+                            Printed calendar
+                        </a>
+                    </div>
+                    <div id="print-fields" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="checkbox">
+                                <input type="hidden" name="printevent" value="0" />
+                                <label class="control-label" for="printevent">
+                                    <input type="checkbox" name="printevent" id="printevent" {{# printevent }}checked{{/ printevent }} />
+                                    Include in the print calendar?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="tinytitle">Tiny title (24 chars):</label>
+                                <input type="text" class="form-control" name="tinytitle" id="tinytitle" value="{{tinytitle}}" maxlength="24" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="printdescr">Print description:</label>
+                                <textarea class="form-control" name="printdescr" id="printdescr" maxlength="255" >{{printdescr}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="printcontact">Print contact info:</label>
+                                <input type="text" class="form-control" name="printcontact" id="printcontact" value="{{printcontact}}" maxlength="255" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a role="button" data-toggle="collapse" data-parent="#event-fields" href="#contact-fields">
+                            Contact info
+                        </a>
+                    </div>
+                    <div id="contact-fields" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="control-label" for="organizer">Your name:</label>
+                                <input type="text" class="form-control" name="organizer" id="organizer" value="{{organizer}}">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="email">Your email:</label>
+                                <input type="text" class="form-control" name="email" id="email" value="{{email}}" >
+                            </div>
+                            <div class="checkbox">
+                                <input type="hidden" name="email-me" value="0" />
+                                <label class="control-label" for="email-me">
+                                    <input type="checkbox" name="email-me" id="email-me" {{# emailMe }}checked{{/ emailMe }} />
+                                    Send forum messages to this email address
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <input type="hidden" name="hideemail" value="0" />
+                                <label class="control-label" for="hideemail">
+                                    <input type="checkbox" name="hideemail" id="hideemail" {{# hideEmail }}checked{{/ hideEmail }} />
+                                    Don't publish my email address online
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <p>For tips on making your ride successful, we ask that you read the <a href="rideleadingcomic.html">Ride Leading Comic</a> at least once before submitting an event</p>
             <div class="checkbox">
