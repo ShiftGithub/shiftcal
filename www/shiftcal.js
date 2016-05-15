@@ -196,14 +196,14 @@ $(document).ready( function() {
         previewEvent['length'] += ' miles';
         previewEvent['preview'] = true;
         previewEvent['mapLink'] = getMapLink(previewEvent['address']);
-        $('#general-fields').hide();
+        $('#event-entry').hide();
         mustacheData = {dates: [{
             date: formatDate(previewEvent.dates[0]),
             events: [previewEvent]
         }]};
         $('#preview-button').hide();
         $('#preview-edit-button').show().on('click', function() {
-            $('#general-fields').show();
+            $('#event-entry').show();
             $('.date').remove();
             $('#preview-button').show();
             $('#preview-edit-button').hide();
