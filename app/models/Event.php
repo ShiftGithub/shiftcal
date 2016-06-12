@@ -110,7 +110,8 @@ class Event extends fActiveRecord {
     public function emailSecret() {
         global $PROTOCOL, $HOST, $PATH;
         $base = $PROTOCOL . $HOST . $PATH;
-        mail($this->getEmail(), "Edit event", "$base#editEvent/" . $this->getId() . "/" .$this->getPassword());
+	$headers = 'From: bikefun@shift2bikes.org' . "\r\n" .  'Reply-To: bikefun@shift2bikes.org' . "\r\n";
+        mail($this->getEmail(), "Your Bike Event" . $this->getTitle(), "Hi!  To confirm and publish the event, please visit $base#editEvent/" . $this->getId() . "/" .$this->getPassword(), $headers);
     }
 
     public function unhide() {
