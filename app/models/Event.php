@@ -163,7 +163,9 @@ class Event extends fActiveRecord {
         // Named incorrectly, move, update db, return
         $new_path = "$IMAGEDIR/$new_name";
 
-        rename($old_path, $new_path);
+        if (file_exists($old_path)) {
+            rename($old_path, $new_path);
+        }
         $this->setImage($new_name);
         $this->store();
 
