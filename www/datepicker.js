@@ -2,6 +2,7 @@
 
     // Global state variables, initialized in setupDatePicker
     var $dateSelect,
+        $dateSelected,
         $loadLater,
         $loadEarlier,
         $datePicker,
@@ -44,6 +45,7 @@
 
         // Scrolling container for the table
         $dateSelect = $('#date-select');
+        $dateSelected = $('#date-selected');
         // Placeholder divs that trigger loading when visible
         $loadLater = $('#load-later');
         $loadEarlier = $('#load-earlier');
@@ -83,6 +85,7 @@
                     }
                 }
                 $e.toggleClass('selected', dateMap[date]);
+                $dateSelected.html($datePicker.dateList().join('<br>'));
 
                 return false;
             }
@@ -91,6 +94,7 @@
 
         // Setup the month table scroll checks
         $dateSelect.scroll(checkBounds);
+        $dateSelected.text($datePicker.dateList().join(' '));
         checkBounds();
     };
 
