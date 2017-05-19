@@ -69,7 +69,7 @@ class EventTime extends fActiveRecord {
 
     protected function getShareable() {
         global $PROTOCOL, $HOST, $PATH;
-        $base = $PROTOCOL . $HOST . $PATH;
+        $base = trim($PROTOCOL . $HOST . $PATH, '/');
 
         $caldaily_id = $this->getPkid();
         return "$base/event-" . $caldaily_id;
