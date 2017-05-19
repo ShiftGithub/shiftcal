@@ -263,7 +263,7 @@
 
                                     {{contact}}
                                 </p>
-                                <p class="permalink">
+                                <p class="eventlink">
                                     <a
                                         {{^preview}}
                                             href="event-{{caldaily_id}}"
@@ -272,14 +272,6 @@
                                         Sharable link
 
                                     </a>   
-                                    <!-- disable Facebook for now since previews on timeline aren't available
-                                    <a 
-                                       href="https://www.facebook.com/sharer/sharer.php?u={{shareable}}"
-                                       target="_blank">
-                                       Share on Facebook
-                                    </a>
-                                    -->                         
-                                    &bull;
                                     <a
                                         {{^preview}}
                                             href="{{exportlink}}"
@@ -288,6 +280,11 @@
                                         class="export-link">
                                         Export to calendar
                                     </a>
+                                    <a 
+                                       href="https://www.facebook.com/sharer/sharer.php?u={{shareable}}"
+                                       target="_blank">
+                                       <img src="images/shareonfacebook-2.png" alt="Share on Facebook"/>
+                                    </a>                                    
                                 </p>
                                 {{#preview}}
                                      <hr>

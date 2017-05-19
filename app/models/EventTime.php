@@ -72,7 +72,7 @@ class EventTime extends fActiveRecord {
         $base = $PROTOCOL . $HOST . $PATH;
 
         $caldaily_id = $this->getPkid();
-        return "$base#event-" . $caldaily_id;
+        return "$base/event-" . $caldaily_id;
     }
     
     public function toEventSummaryArray() {

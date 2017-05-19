@@ -46,6 +46,10 @@ nav.navbar {
     background-position: center;
 }
 
+.preview .eventlink {
+   visibility: hidden;
+}
+
 .container {
 	padding-left: 5px;
 	padding-right: 0px;
