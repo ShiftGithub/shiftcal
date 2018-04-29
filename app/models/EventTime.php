@@ -1,39 +1,6 @@
 <?php
 
 class EventTime extends fActiveRecord {
-
-    public static function matchEventTimesToDates($event, $phpDates) {
-        $dates = array();
-        foreach ($phpDates as $dateVal) {
-            $dates []= $dateVal->format('Y-m-d');
-        }
-
-        foreach ($event->buildEventTimes('id') as $eventTime) {
-            // For all existing dates
-            $formattedDate = $eventTime->getFormattedDate();
-            if (!in_array($formattedDate, $dates)) {
-                // If they didn't submit this existing date delete it
-                $eventTime->delete();
-            }
-            else {
-                if (($key = array_search($formattedDate, $dates)) !== false) {
-                    unset($dates[$key]);
-                }
-            }
-        }
-        foreach ($dates as $newDate) {
-            $eventTime = new EventTime();
-            $eventTime->setModified(time());
-            $eventTime->setId($event->getId());
-            $eventTime->setEventdate($newDate);
-            $eventTime->setEventstatus('A');
-            $eventTime->store();
-        }
-        // Flourish is suck. I can't figure out the "right" way to do one-to-many cause docs are crap
-        // This clears a cache that causes subsequent operations (buildEventTimes) to return stale data
-        $event->related_records = array();
-    }
-
     public static function getByID($id) {
         return fRecordSet::build(
             'EventTime', // class
@@ -55,6 +22,18 @@ class EventTime extends fActiveRecord {
             ), // where
             array('eventdate' => 'asc')  // order by
         );
+    }
+
+    public function updateStatus($dateStatus) {
+        if ($this->getEventstatus() !== $dateStatus['status']) {
+            // EventTime status is different than the request, update EventTime db entry
+            $this->setEventstatus($dateStatus['status']);
+        }
+        if ($this->getNewsflash() !== $dateStatus['newsflash']) {
+            // EventTime newsflash is different than the request, update EventTime db entry
+            $this->setNewsflash($dateStatus['newsflash']);
+        }
+        $this->store();
     }
 
     private function getEvent() {
@@ -80,6 +59,15 @@ class EventTime extends fActiveRecord {
 
     public function getFormattedDate() {
         return $this->getEventdate()->format('Y-m-d');
+    }
+
+    public function getFormattedDateStatus() {
+        $dateObject = array();
+        $dateObject['id'] = $this->getPkid(); // Get ID for this EventTime
+        $dateObject['date'] = $this->getFormattedDate(); // Get pretty date
+        $dateObject['status'] = $this->getEventstatus(); 
+        $dateObject['newsflash'] = $this->getNewsflash();
+        return $dateObject;
     }
 
     protected function getShareable() {
