@@ -1,37 +1,23 @@
 <?php
 
 class EventTime extends fActiveRecord {
+    public static function createNewEventTime($eventId, $dateStatus) {
+        $date = $dateStatus['date'];
 
-    public static function matchEventTimesToDates($event, $phpDates) {
-        $dates = array();
-        foreach ($phpDates as $dateVal) {
-            $dates []= $dateVal->format('Y-m-d');
+        if (isset($dateStatus['status'])) {
+            $status = $dateStatus['status'];
+        } else {
+            $status = 'A';
         }
+        $newsflash = $dateStatus['newsflash'];
 
-        foreach ($event->buildEventTimes('id') as $eventTime) {
-            // For all existing dates
-            $formattedDate = $eventTime->getFormattedDate();
-            if (!in_array($formattedDate, $dates)) {
-                // If they didn't submit this existing date delete it
-                $eventTime->delete();
-            }
-            else {
-                if (($key = array_search($formattedDate, $dates)) !== false) {
-                    unset($dates[$key]);
-                }
-            }
-        }
-        foreach ($dates as $newDate) {
-            $eventTime = new EventTime();
-            $eventTime->setModified(time());
-            $eventTime->setId($event->getId());
-            $eventTime->setEventdate($newDate);
-            $eventTime->setEventstatus('A');
-            $eventTime->store();
-        }
-        // Flourish is suck. I can't figure out the "right" way to do one-to-many cause docs are crap
-        // This clears a cache that causes subsequent operations (buildEventTimes) to return stale data
-        $event->related_records = array();
+        $eventTime = new EventTime();
+        $eventTime->setModified(time());
+        $eventTime->setId($eventId);
+        $eventTime->setEventdate($date->format('Y-m-d'));
+        $eventTime->setEventstatus($status);
+        $eventTime->setNewsflash($newsflash);
+        $eventTime->store();
     }
 
     public static function getByID($id) {
@@ -57,6 +43,18 @@ class EventTime extends fActiveRecord {
         );
     }
 
+    public function updateStatus($dateStatus) {
+        if ($this->getEventstatus() !== $dateStatus['status']) {
+            // EventTime status is different than the request, update EventTime db entry
+            $this->setEventstatus($dateStatus['status']);
+        }
+        if ($this->getNewsflash() !== $dateStatus['newsflash']) {
+            // EventTime newsflash is different than the request, update EventTime db entry
+            $this->setNewsflash($dateStatus['newsflash']);
+        }
+        $this->store();
+    }
+
     private function getEvent() {
         try {
             if ($this->getEventstatus() === 'E') {
@@ -80,6 +78,15 @@ class EventTime extends fActiveRecord {
 
     public function getFormattedDate() {
         return $this->getEventdate()->format('Y-m-d');
+    }
+
+    public function getFormattedDateStatus() {
+        $dateObject = array();
+        $dateObject['id'] = $this->getPkid(); // Get ID for this EventTime
+        $dateObject['date'] = $this->getFormattedDate(); // Get pretty date
+        $dateObject['status'] = $this->getEventstatus(); 
+        $dateObject['newsflash'] = $this->getNewsflash();
+        return $dateObject;
     }
 
     protected function getShareable() {

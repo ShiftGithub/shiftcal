@@ -99,6 +99,31 @@ class Event extends fActiveRecord {
         return $event;
     }
 
+    public function updateExistingEventTimes($dateStatuses) {
+        foreach ($this->buildEventTimes('id') as $eventTime) {
+            // For all existing EventTimes in the db
+            $dateStatusId = $eventTime->getPkid();
+            if (!isset($dateStatuses[$dateStatusId])) {
+                // EventTime exists in db but not in request
+                // They didn't resubmit this existing date - delete it
+                // TODO: Think about making the deletion functionality its own API endpoint
+                $eventTime->delete();
+            } else {
+                // EventTime exists in request and in db
+                // Update the existing EventTime and remove it from the array of new EventTimes
+                $eventTime->updateStatus($dateStatuses[$dateStatusId]);
+            }
+        }
+
+        // Flourish is suck. I can't figure out the "right" way to do one-to-many cause docs are crap
+        // This clears a cache that causes subsequent operations (buildEventTimes) to return stale data
+        $this->related_records = array();
+    }
+
+    public function addEventTime($dateStatus) {
+        EventTime::createNewEventTime($this->getId(), $dateStatus);
+    }
+
     private function getDates() {
         $eventTimes = $this->buildEventTimes('id');
         $eventDates = [];
@@ -108,11 +133,21 @@ class Event extends fActiveRecord {
         return $eventDates;
     }
 
+    private function getEventDateStatuses() {
+        $eventTimes = $this->buildEventTimes('id');
+        $eventDateStatuses = array();
+        foreach ($eventTimes as $eventTime) {
+            $eventDateStatuses []= $eventTime->getFormattedDateStatus();
+        }
+        return $eventDateStatuses;
+    }
+
     public function toDetailArray($include_hidden=false) {
         // first get the data into an array
         $detailArray = $this->toArray($include_hidden);
         // add all times that exist, maybe none.
-        $detailArray["dates"] = $this->getDates(); // Return the actual dates, not the hacky string
+        //$detailArray["dates"] = $this->getDates(); // Return the actual dates, not the hacky string
+        $detailArray["dateStatuses"] = $this->getEventDateStatuses(); 
         // return potentially augmented array
         return $detailArray;
     }
