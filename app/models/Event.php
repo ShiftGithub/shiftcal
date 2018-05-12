@@ -121,22 +121,7 @@ class Event extends fActiveRecord {
     }
 
     public function addEventTime($dateStatus) {
-        $date = $dateStatus['date'];
-
-        if (isset($dateStatus['status'])) {
-            $status = $dateStatus['status'];
-        } else {
-            $status = 'A';
-        }
-        $newsflash = $dateStatus['newsflash'];
-
-        $eventTime = new EventTime();
-        $eventTime->setModified(time());
-        $eventTime->setId($this->getId());
-        $eventTime->setEventdate($date->format('Y-m-d'));
-        $eventTime->setEventstatus($status);
-        $eventTime->setNewsflash($newsflash);
-        $eventTime->store();
+        EventTime::createNewEventTime($this->getId(), $dateStatus);
     }
 
     private function getDates() {
