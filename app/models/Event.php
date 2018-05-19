@@ -85,7 +85,7 @@ class Event extends fActiveRecord {
         $event->setEventduration(get($input['eventduration'], 0));
         $event->setWeburl(get($input['weburl'], ''));
         $event->setWebname(get($input['webname'], ''));
-        $event->setAudience(get($input['audience'], ''));
+        $event->setAudience(get($input['audience'], 'G')); // default to 'G'eneral
         $event->setTinytitle(get($input['tinytitle'], ''));
         $event->setPrintdescr(get($input['printdescr'], ''));
         $event->setDates(get($input['datestring'], '')); // string field 'dates' needed for legacy admin calendar

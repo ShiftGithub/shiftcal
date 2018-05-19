@@ -18,27 +18,144 @@
     };
 
     function populateEditForm(shiftEvent, callback) {
-        var i, h, m, meridian,
-            displayHour, displayMinute, timeChoice,
-            template, rendered, item,
-            lengths = [ '0-3', '3-8', '8-15', '15+'],
-            audiences = [{code: 'F', text: 'Family friendly. Adults bring children.'},
-                         {code: 'G', text: 'General. For adults, but kids welcome.'},
-                         {code: 'A', text: '21+ only. Alcohol involved.'}],
-            areas = [{code: 'P', text: 'Portland'},
-                {code: 'V', text: 'Vancouver'}];
+        buildLengthOptions(shiftEvent);
+        buildTimeOptions(shiftEvent);
+        buildAudienceOptions(shiftEvent);
+        buildAreaOptions(shiftEvent);
 
-        shiftEvent.lengthOptions = [];
-        for ( i = 0; i < lengths.length; i++ ) {
-            item = {range: lengths[i]};
-            if (shiftEvent.length == lengths[i]) {
-                item.isSelected = true;
+        template = $('#mustache-edit').html();
+        rendered = Mustache.render(template, shiftEvent);
+        callback(rendered);
+
+        $('#date-select').setupDatePicker(shiftEvent['dates'] || []);
+
+        $('#edit-header').affix({
+            offset: {
+                top: 100
             }
-            shiftEvent.lengthOptions.push(item);
+        });
+        if (shiftEvent.dates.length === 0) {
+            $('#save-button').prop('disabled', true);
+            $('#preview-button').prop('disabled', true);
         }
+        $('#save-button').click(function() {
+            saveEvent(shiftEvent);
+        });
+
+        $(document).off('click', '#preview-button')
+            .on('click', '#preview-button', function(e) {
+            previewEvent(shiftEvent, function(eventHTML) {
+                $('#mustache-html').append(eventHTML);
+            });
+        });
+    }
+
+    function saveEvent(shiftEvent) {
+        var isNew = !shiftEvent.id;
+        var postVars = eventFromForm();
+        if (!isNew) {
+            postVars['id'] = shiftEvent.id;
+        }
+        var opts = buildSaveEventRequest(postVars)
+
+        $.when($.ajax(opts)).done(function (returnVal) {
+            var msg = isNew ?
+                'Thank you! A link with a URL to edit and manage the ' +
+                'event has been emailed to ' + postVars.email +
+                '. You must click this link for the event to become visible. ' +
+                'If you don\'t receive that email within 20 minutes, ' + 
+                'please contact bikecal@shift2bikes.org for help.' :
+                'Your event has been updated!';
+
+            if (returnVal.secret) {
+                pushSecretUrl(returnVal);
+                msg += ' You may also bookmark the current URL before you click OK.';
+            }
+
+            $('#success-message').text(msg);
+            $('#success-modal').modal('show');
+            shiftEvent.id = returnVal.id;
+        }).fail(function(returnVal) {
+            var err = returnVal.responseJSON
+                ? returnVal.responseJSON.error
+                : { message: 'Server error saving event!' };
+
+            $('#save-result').addClass('text-danger').text(err.message);
+
+            addFieldErrors(err);
+            expandErrorFields();
+        });
+    }
+
+    function buildSaveEventRequest(postVars) {
+        $('.form-group').removeClass('has-error');
+        $('[aria-invalid="true"]').attr('aria-invalid', false);
+        $('.help-block').remove();
+        $('#save-result').removeClass('text-danger').text('');
+
+        var data = new FormData();
+        $.each($('#image')[0].files, function (i, file) {
+            data.append('file', file);
+        });
+        data.append('json', JSON.stringify(postVars));
+
+        var opts = {
+            type: 'POST',
+            url: 'manage_event.php',
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: data,
+        };
+
+        if (data.fake) {
+            opts.xhr = function () { var xhr = jQuery.ajaxSettings.xhr(); xhr.send = xhr.sendAsBinary; return xhr; }
+            opts.contentType = "multipart/form-data; boundary=" + data.boundary;
+            opts.data = data.toString();
+        }
+
+        return opts;
+    }
+
+    function pushSecretUrl(returnVal) {
+        var newUrl = 'editEvent-' + returnVal.id + '-' + returnVal.secret;
+        history.pushState({}, newUrl, newUrl);
+        $('#secret').val(returnVal.secret);
+    }
+
+    function addFieldErrors(err) {
+        $.each(err.fields, function (fieldName, message) {
+            var input = $('[name=' + fieldName + ']');
+            var parent = input.closest('.form-group,.checkbox');
+            var label = $('label', parent);
+
+            input.attr('aria-invalid', true);
+            parent
+                .addClass('has-error')
+                .append('<div class="help-block">' + message + '</div>');
+            $('.help-block .field-name', parent).text(
+                label.text().toLowerCase()
+            );
+        });
+    }
+
+    function expandErrorFields() {
+        // Collapse groups without errors, show groups with errors
+        var errGroups = $('.has-error').closest('.panel-collapse');
+        var okGroups = $('.panel-collapse').not(errGroups);
+        errGroups.collapse('show');
+        okGroups.collapse('hide');
+        $('#preview-edit-button').click();
+    }
+
+    function buildTimeOptions(shiftEvent) {
+        var h, m, meridian,
+            displayHour, displayMinute, timeChoice,
+            template, rendered, item;
 
         shiftEvent.timeOptions = [];
         meridian = 'AM';
+        // TODO: Use moment here
         for ( h = 0; h < 24; h++ ) {
             for ( m = 0; m < 60; m += 15 ) {
                 if ( h > 11 ) {
@@ -69,21 +186,13 @@
             }
         }
         shiftEvent.timeOptions.push({ time: "11:59 PM" });
+    }
 
-        if (!shiftEvent.audience) {
-            shiftEvent.audience = 'G';
-        }
-        shiftEvent.audienceOptions = [];
-        for ( i = 0; i < audiences.length; i++ ) {
-            if (shiftEvent.audience == audiences[i].code) {
-                audiences[i].isSelected = true;
-            }
-            shiftEvent.audienceOptions.push(audiences[i]);
-        }
-
-        if (!shiftEvent.area) {
-            shiftEvent.area = 'P';
-        }
+    function buildAreaOptions(shiftEvent) {
+        var areas = [
+            {code: 'P', text: 'Portland'},
+            {code: 'V', text: 'Vancouver'}
+        ]; // 'P' is the default option because it is first in the list
         shiftEvent.areaOptions = [];
         for ( i = 0; i < areas.length; i++ ) {
             if (shiftEvent.area == areas[i].code) {
@@ -91,106 +200,33 @@
             }
             shiftEvent.areaOptions.push(areas[i]);
         }
+    }
 
-        template = $('#mustache-edit').html();
-        rendered = Mustache.render(template, shiftEvent);
-        callback(rendered);
-
-        $('#date-select').setupDatePicker(shiftEvent['dates'] || []);
-
-        $('#edit-header').affix({
-            offset: {
-                top: 100
+    function buildAudienceOptions(shiftEvent) {
+        var audiences = [
+            {code: 'G', text: 'General. For adults, but kids welcome.'},
+            {code: 'F', text: 'Family friendly. Adults bring children.'},
+            {code: 'A', text: '21+ only. Alcohol involved.'}
+        ]; // 'G' is the default option because it is first in the list
+        shiftEvent.audienceOptions = [];
+        for ( i = 0; i < audiences.length; i++ ) {
+            if (shiftEvent.audience == audiences[i].code) {
+                audiences[i].isSelected = true;
             }
-        });
-        if (shiftEvent.dates.length === 0) {
-            $('#save-button').prop('disabled', true);
-            $('#preview-button').prop('disabled', true);
+            shiftEvent.audienceOptions.push(audiences[i]);
         }
-        $('#save-button').click(function() {
-            var postVars,
-                isNew = !shiftEvent.id;
-            $('.form-group').removeClass('has-error');
-            $('[aria-invalid="true"]').attr('aria-invalid', false);
-            $('.help-block').remove();
-            $('#save-result').removeClass('text-danger').text('');
-            postVars = eventFromForm();
-            if (!isNew) {
-                postVars['id'] = shiftEvent.id;
+    }
+
+    function buildLengthOptions(shiftEvent) {
+        var lengths = [ '0-3', '3-8', '8-15', '15+'];
+        shiftEvent.lengthOptions = [];
+        for ( i = 0; i < lengths.length; i++ ) {
+            item = {range: lengths[i]};
+            if (shiftEvent.length == lengths[i]) {
+                item.isSelected = true;
             }
-            var data = new FormData();
-            $.each($('#image')[0].files, function(i, file) {
-                data.append('file', file);
-            });
-            data.append('json', JSON.stringify(postVars));
-            var opts = {
-                type: 'POST',
-                url: 'manage_event.php',
-                contentType: false,
-                processData: false,
-                cache: false,
-                data: data,
-                success: function(returnVal) {
-                    var msg = isNew ?
-                        'Thank you! A link with a URL to edit and manage the ' +
-                            'event has been emailed to ' + postVars.email +
-                            '. You must click this link for the event to become visible.  If you don\'t receive that email within 20 minutes, please contact bikecal@shift2bikes.org for help.' :
-                        'Your event has been updated!';
-
-                    if (returnVal.secret) {
-                        var newUrl = 'editEvent-' + returnVal.id + '-' + returnVal.secret;
-						history.pushState({}, newUrl, newUrl);
-                        $('#secret').val(returnVal.secret);
-                        msg += ' You may also bookmark the current URL before you click OK.'
-                    }
-                    $('#success-message').text(msg);
-                    $('#success-modal').modal('show');
-                    shiftEvent.id = returnVal.id;
-                },
-                error: function(returnVal) {
-                    var err = returnVal.responseJSON
-                                ? returnVal.responseJSON.error
-                                : { message: 'Server error saving event!' },
-                        okGroups,
-                        errGroups;
-
-                    $('#save-result').addClass('text-danger').text(err.message);
-
-                    $.each(err.fields, function(fieldName, message) {
-                        var input = $('[name=' + fieldName + ']'),
-                            parent = input.closest('.form-group,.checkbox'),
-                            label = $('label', parent);
-                        input.attr('aria-invalid', true);
-                        parent
-                            .addClass('has-error')
-                            .append('<div class="help-block">' + message + '</div>');
-                        $('.help-block .field-name', parent).text(
-                            label.text().toLowerCase()
-                        );
-                    });
-
-                    // Collapse groups without errors, show groups with errors
-                    errGroups = $('.has-error').closest('.panel-collapse');
-                    okGroups = $('.panel-collapse').not(errGroups);
-                    errGroups.collapse('show');
-                    okGroups.collapse('hide');
-                    $('#preview-edit-button').click();
-                }
-            };
-            if(data.fake) {
-                opts.xhr = function() { var xhr = jQuery.ajaxSettings.xhr(); xhr.send = xhr.sendAsBinary; return xhr; }
-                opts.contentType = "multipart/form-data; boundary="+data.boundary;
-                opts.data = data.toString();
-            }
-            $.ajax(opts);
-        });
-
-        $(document).off('click', '#preview-button')
-            .on('click', '#preview-button', function(e) {
-            previewEvent(shiftEvent, function(eventHTML) {
-                $('#mustache-html').append(eventHTML);
-            });
-        });
+            shiftEvent.lengthOptions.push(item);
+        }
     }
 
     function previewEvent(shiftEvent, callback) {
