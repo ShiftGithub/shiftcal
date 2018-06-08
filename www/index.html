@@ -481,21 +481,25 @@
                                     <a href="https://www.facebook.com/sharer/sharer.php?u={{shareable}}" target="_blank">
                                     <img src="images/icons/facebook.svg" alt="Facebook"/>Share</a>
                                 </p>
-                                <p>
-                                    <a
+                                <ul>
+                                    <li>
+                                        <a
                                         {{^preview}}
                                             href="event-{{caldaily_id}}"
                                         {{/preview}}
                                         class="share-link">
                                         Sharable link</a>
-                                    <a
+                                    </li>
+                                    <li>
+                                        <a
                                         {{^preview}}
                                             href="{{exportlink}}"
                                         {{/preview}}
                                         data-id="{{caldaily_id}}"
                                         class="export-link">
                                         Export to calendar</a>
-                                </p>
+                                    </li>
+                                </ul>
                             </div>
                             {{#preview}}
                                 <hr>
