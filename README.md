@@ -30,7 +30,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 4. Get a mysql dump from the Calendar Crew
 5. Temporarily move the dump into the shiftcal directory
 6. Run `cat dump.sql | ./nift mysql-pipe`
-7. Make a copy of `config.php.example` and rename it `config.php`
+7. Make a copy of `app/config.php.example` and rename it `config.php`
 8. Access https://localhost:4443 and ignore the certificate warning
 
 The event images are not included; the site will work without them. If you want to see the existing event images locally, get a backup of the images from the Calendar Crew. Place the event images in `www/calendarimages`.
